@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/BinarySearchTree.h
+climits
+-
+cmath
+-
+utils.h
+../include/utils.h
+BinaryTree.h
+../include/BinaryTree.h
+
+../include/RedBlackTree.h
+BinarySearchTree.h
+../include/BinarySearchTree.h
+
+../include/utils.h
+
+/home/roy/programming/DataStructure_Algorithm/DataStructure/cpp/CH9_RedBlackTree/src/main.cpp
+cmath
+-
+cassert
+-
+ctime
+-
+cstdlib
+-
+iostream
+-
+RedBlackTree.h
+/home/roy/programming/DataStructure_Algorithm/DataStructure/cpp/CH9_RedBlackTree/src/RedBlackTree.h
+
