@@ -27,7 +27,7 @@ public:
 template<class Node, class T>
 class BinarySearchTree : public BinaryTree<Node> {
 protected:
-	using BinaryTree<Node>::r;
+	using BinaryTree<Node>::root;
 	using BinaryTree<Node>::nil;
 	int n;
 	T null;
@@ -84,7 +84,7 @@ BinarySearchTree<Node,T>::BinarySearchTree(T null) {
 
 template<class Node, class T>
 Node* BinarySearchTree<Node,T>::findLast(T x) {
-	Node *w = r, *prev = nil;
+	Node *w = root, *prev = nil;
 	while (w != nil) {
 		prev = w;
 		int comp = compare(x, w->x);
@@ -101,7 +101,7 @@ Node* BinarySearchTree<Node,T>::findLast(T x) {
 
 template<class Node, class T>
 T BinarySearchTree<Node,T>::findEQ(T x) {
-	Node *w = r;
+	Node *w = root;
 	while (w != nil) {
 		int comp = compare(x, w->x);
 		if (comp < 0) {
@@ -118,7 +118,7 @@ T BinarySearchTree<Node,T>::findEQ(T x) {
 // Return the smallest value of the tree that is greater than or equal to x
 template<class Node, class T>
 T BinarySearchTree<Node,T>::find(T x) {
-	Node *w = r, *z = nil;
+	Node *w = root, *z = nil;
 	while (w != nil) {
 		int comp = compare(x, w->x);
 		if (comp < 0) {
@@ -141,7 +141,7 @@ BinarySearchTree<Node,T>::~BinarySearchTree() {
 template<class Node, class T>
 bool BinarySearchTree<Node, T>::addChild(Node *p, Node *u) {
 		if (p == nil) {
-			r = u;              // inserting into empty tree
+			root = u;              // inserting into empty tree
 		} else {
 			int comp = compare(u->x, p->x);
 			if (comp < 0) {
@@ -181,8 +181,8 @@ void BinarySearchTree<Node, T>::splice(Node *u) {
 		s = u->right;
 	}
 
-	if (u == r) { 	// If u is the root.
-		r = s;
+	if (u == root) { 	// If u is the root.
+		root = s;
 		p = nil;
 	} else {
 		p = u->parent;
@@ -194,7 +194,7 @@ void BinarySearchTree<Node, T>::splice(Node *u) {
 		}
 	}
 	// connect s->parent to its parent.
-	if (s != nil) {	// if a node is not null node?       		 
+	if (s != nil) {	// if a node is not null node?
 		s->parent = p;
 	}
 	n--;
@@ -203,7 +203,7 @@ void BinarySearchTree<Node, T>::splice(Node *u) {
 // Complex one
 // 1. If u is a leaf, then we can just detach u from its parent.
 // 2. If u has only one child, then we can splice u from the tree by having u.parent adopt u's child
-// 3. If u has two children. Replace the node from its right child's smallest decedent. 
+// 3. If u has two children. Replace the node from its right child's smallest decedent.
 template<class Node, class T>
 void BinarySearchTree<Node, T>::remove(Node *u) {
 	if (u->left == nil || u->right == nil) { 	// Case 1 or 2
@@ -257,7 +257,7 @@ void BinarySearchTree<Node, T>::rotateLeft(Node *u) {
 	}
 	u->parent = w;
 	w->left = u;
-	if (u == r) { r = w; r->parent = nil; }
+	if (u == root) { root = w; root->parent = nil; }
 }
 
 template<class Node, class T>
@@ -277,7 +277,7 @@ void BinarySearchTree<Node, T>::rotateRight(Node *u) {
 	}
 	u->parent = w;
 	w->right = u;
-	if (u == r) { r = w; r->parent = nil; }
+	if (u == root) { root = w; root->parent = nil; }
 }
 
 

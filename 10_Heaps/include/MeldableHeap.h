@@ -24,7 +24,7 @@ public:
 template<class Node, class T>
 class MeldableHeap: public BinaryTree<Node> {
 protected:
-	using BinaryTree<Node>::r;
+	using BinaryTree<Node>::root;
 	using BinaryTree<Node>::nil;
 	int n;
 	Node *merge(Node *h1, Node *h2);
@@ -78,8 +78,8 @@ bool MeldableHeap<Node,T>::add(T x) {
 	Node *u = new Node();
 	u->left = u->right = u->parent = nil;
 	u->x = x;
-	r = merge(u, r);
-	r->parent = nil;
+	root = merge(u, root);
+	root->parent = nil;
 	n++;
 	return true;
 }
@@ -88,18 +88,18 @@ bool MeldableHeap<Node,T>::add(T x) {
 
 template<class Node, class T>
 T MeldableHeap<Node,T>::findMin() {
-	return r->x;
+	return root->x;
 }
 
 
 
 template<class Node, class T>
 T MeldableHeap<Node,T>::remove() {
-	T x = r->x;
-	Node *tmp = r;
-	r = merge(r->left, r->right);
+	T x = root->x;
+	Node *tmp = root;
+	root = merge(root->left, root->right);
 	delete tmp;
-	if (r != nil) r->parent = nil;
+	if (root != nil) root->parent = nil;
 	n--;
 	return x;
 }
@@ -108,7 +108,7 @@ T MeldableHeap<Node,T>::remove() {
 
 template<class Node, class T>
 void MeldableHeap<Node,T>::remove(Node *u) {
-	if (u == r) {
+	if (u == root) {
 		remove();
 	} else {
 		if (u == u->parent->left) {
@@ -117,9 +117,9 @@ void MeldableHeap<Node,T>::remove(Node *u) {
 			u->parent->right = nil;
 		}
 		u->parent = nil;
-		r = merge(r, u->left);
-		r = merge(r, u->right);
-		r->parent = nil;
+		root = merge(root, u->left);
+		root = merge(root, u->right);
+		root->parent = nil;
 		n--;
 	}
 }

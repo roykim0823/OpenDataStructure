@@ -8,77 +8,83 @@
 #ifndef BINARYHEAP_H_
 #define BINARYHEAP_H_
 
+#include <vector>
+#include <algorithm>
 #include <cstring>
 #include "utils.h"
-#include "array.h"
 
 namespace ods {
 
 template<class T>
 class BinaryHeap {
 protected:
-	array<T> a;
+	std::vector<T> a;
 	int n;
+
 	void resize();
 	void bubbleUp(int i);
 	void trickleDown(int i);
-	static int left(int i) {
-		return 2*i + 1;
+	void swap(int i, int j) {
+		T t = a[i];
+		a[i] = a[j];
+		a[j] = t;
 	}
-	static int right(int i) {
-		return 2*i + 2;
-	}
-	static int parent(int i) {
-		return (i-1)/2;
-	}
+
+	// class member function
+	static int left(int i) 		{ return 2*i + 1; }
+	static int right(int i) 	{ return 2*i + 2; }
+	static int parent(int i) 	{ return (i-1)/2; }	// i >= 1
 public:
-	BinaryHeap();
-	BinaryHeap(array<T>& b);
-	virtual ~BinaryHeap();
-	bool add(T x);
-	T findMin() {
-		return a[0];
-	}
+	BinaryHeap(): n(0) {}
+	BinaryHeap(std::vector<T>& b);
+	virtual ~BinaryHeap() {}
+	void add(T x);
+	T findMin() { return a[0]; }
 	T remove();
+	int size() { return n; }
 	void clear();
-	int size() {
-		return n;
-	}
-	static void sort(array<T> &b);
+	static void sort(std::vector<T> &b);
 };
 
+template<class T>
+BinaryHeap<T>::BinaryHeap(std::vector<T> &b) : a(b) {
+	n = a.size();
+	for (int i = n/2-1; i >= 0; i--) { 	// from last element of half covers all the elements
+		trickleDown(i);
+	}
+}
 
 template<class T>
 void BinaryHeap<T>::resize() {
-	array<T> b(max(2*n, 1));
-	std::copy(a+0, a+n, b+0);
-	a = b;
+	a.resize(max(2*n,1));
 }
 
 template<class T>
-void BinaryHeap<T>::sort(array<T> &b) {
+void BinaryHeap<T>::sort(std::vector<T> &b) {
 	BinaryHeap<T> h(b);
 	while (h.n > 1) {
-		h.a.swap(--h.n, 0);
+		//h.a.swap(--h.n, 0);
+		h.swap(--h.n, 0); 	// swap the last elment to top
 		h.trickleDown(0);
 	}
 	b = h.a;
-	b.reverse();
+	std::reverse(std::begin(b), std::end(b));	// b.reverse();
 }
 
 template<class T>
-bool BinaryHeap<T>::add(T x) {
-	if (n + 1 > a.length) resize();
-	a[n++] = x;
-	bubbleUp(n-1);
-	return true;
+//bool BinaryHeap<T>::add(T x) {
+void BinaryHeap<T>::add(T x) {
+	if (n + 1 > (int)a.size()) resize();
+	a[n++] = x;		// put the new element at the last
+	bubbleUp(n-1);  // bubbleUp the new element : O(log n)
+	//return true;
 }
 
 template<class T>
 void BinaryHeap<T>::bubbleUp(int i) {
 	int p = parent(i);
-	while (i > 0 && compare(a[i], a[p]) < 0) {
-		a.swap(i,p);
+	while (i > 0 && compare(a[i], a[p]) < 0) { 	// compare node with its parent
+		swap(i,p);	// swap if the parent is smaller
 		i = p;
 		p = parent(i);
 	}
@@ -86,10 +92,10 @@ void BinaryHeap<T>::bubbleUp(int i) {
 
 template<class T>
 T BinaryHeap<T>::remove() {
-	T x = a[0];
-	a[0] = a[--n];
-	trickleDown(0);
-	if (3*n < a.length) resize();
+	T x = a[0];  	// heap pops the root node
+	a[0] = a[--n];  // the last node is moved to the root & decrease the size
+	trickleDown(0); // O(log n)
+	if (3*n < (int)a.size()) resize();
 	return x;
 }
 
@@ -98,7 +104,7 @@ void BinaryHeap<T>::trickleDown(int i) {
 	do {
 		int j = -1;
 		int r = right(i);							// Choose the right child
-		if (r < n && compare(a[r], a[i]) < 0) {    	// if a[r]<a[i]
+		if (r < n && compare(a[r], a[i]) < 0) {    	// if a[r] < a[i]
 			int l = left(i);
 			if (compare(a[l], a[r]) < 0) {    		// Compare both children, then j=smaller one
 				j = l;
@@ -111,32 +117,16 @@ void BinaryHeap<T>::trickleDown(int i) {
 				j = l;                              // j=l
 			}
 		}
-		if (j >= 0)	a.swap(i, j); 	// swap
+		if (j >= 0)	swap(i, j); 	// swap
 		i = j;                      // update i
 	} while (i >= 0);
 }
 
-template<class T>
-BinaryHeap<T>::BinaryHeap() : a(1) {
-	n = 0;
-}
-
-template<class T>
-BinaryHeap<T>::BinaryHeap(array<T> &b) : a(0) {
-	a = b;
-	n = a.length;
-	for (int i = n/2-1; i >= 0; i--) {
-		trickleDown(i);
-	}
-}
-
-template<class T>
-BinaryHeap<T>::~BinaryHeap() {
-	// nothing to do
-}
 
 template<class T>
 void BinaryHeap<T>::clear() {
+	a.clear();
+	n=0;
 }
 
 } /* namespace ods */

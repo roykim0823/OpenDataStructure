@@ -9,7 +9,7 @@
 #define BINARYTREE_H_
 #include <cstdlib>
 
-#include "ArrayDeque.h"
+#include <deque>
 
 namespace ods {
 
@@ -31,7 +31,7 @@ public:
 template<class Node>
 class BinaryTree {
 protected:
-	Node *r;    // root node
+	Node *root;    // root node
 	Node *nil;  // null-like node
 	virtual int size(Node *u);
 	virtual int height(Node *u);
@@ -60,7 +60,7 @@ BinaryTree<Node>::~BinaryTree() {
 
 template<class Node>
 void BinaryTree<Node>::clear() {
-	Node *u = r, *prev = nil, *next;
+	Node *u = root, *prev = nil, *next;
 	while (u != nil) {
 		if (prev == u->parent) {
 			if (u->left != nil) next = u->left;
@@ -77,26 +77,26 @@ void BinaryTree<Node>::clear() {
 			delete u;
 		u = next;
 	}
-	r = nil;
+	root = nil;
 }
 
 template<class Node>
 BinaryTree<Node>::BinaryTree(Node *nil) {
 	this->nil = nil;
-	r = nil;
+	root = nil;
 }
 
 template<class Node>
 BinaryTree<Node>::BinaryTree() {
 	nil = NULL;
-	r = nil;
+	root = nil;
 }
 
 // Depth of a node
 template<class Node>
 int BinaryTree<Node>::depth(Node *u) {
 	int d = 0;
-	while (u != r) {
+	while (u != root) {
 		u = u->parent;
 		d++;
 	}
@@ -106,13 +106,13 @@ int BinaryTree<Node>::depth(Node *u) {
 // The size of the tree
 template<class Node>
 int BinaryTree<Node>::size() {
-	return size(r);
+	return size(root);
 }
 
 // a size of a node, the number of nodes (Recursive)
 template<class Node>
 int BinaryTree<Node>::size(Node *u) {
-	if (u == nil) return 0;
+	if (u == NULL) return 0;
 	return 1 + size(u->left) + size(u->right);
 }
 
@@ -120,7 +120,7 @@ int BinaryTree<Node>::size(Node *u) {
 // Left, Right, Parent
 template<class Node>
 int BinaryTree<Node>::size2() {
-		Node *u = r, *prev = nil, *next;
+		Node *u = root, *prev = nil, *next;
 		int n = 0;
 		while (u != nil) {
 			if (prev == u->parent) {	// if we arrive at a node u from u.parent,
@@ -144,7 +144,7 @@ int BinaryTree<Node>::size2() {
 // The height of the tree
 template<class Node>
 int BinaryTree<Node>::height() {
-	return height(r);
+	return height(root);
 }
 
 // a height of a node (Recursive)
@@ -157,7 +157,7 @@ int BinaryTree<Node>::height(Node *u) {
 // Traverse the tree
 template<class Node>
 void BinaryTree<Node>::traverse() {
-	traverse(r);
+	traverse(root);
 }
 
 // Traverse from a node (Recursive)
@@ -175,7 +175,7 @@ void BinaryTree<Node>::traverse(Node *u) {
 // Left, Right, Parent: Post-Order
 template<class Node>
 void BinaryTree<Node>::traverse2() {
-	Node *u = r, *prev = nil, *next;
+	Node *u = root, *prev = nil, *next;
 	while (u != nil) {
 		if (prev == u->parent) {
 			if (u->left != nil) next = u->left;
@@ -195,12 +195,19 @@ void BinaryTree<Node>::traverse2() {
 // Breadth-first Traversal
 template<class Node>
 void BinaryTree<Node>::bfTraverse() {
-	ArrayDeque<Node*> q;
-	if (r != nil) q.add(q.size(),r);	// q.size() is just a parameter 
+	std::deque<Node*> q;
+	// if (r != nil) q.add(q.size(),r);	// q.size() is just a parameter
+	// while (q.size() > 0) {
+	// 	Node *u = q.remove(q.size()-1);
+	// 	if (u->left != nil) q.add(q.size(),u->left);
+	// 	if (u->right != nil) q.add(q.size(),u->right);
+	// }
+	if (root != nil) q.push_back(root);	// q.size() is just a parameter
 	while (q.size() > 0) {
-		Node *u = q.remove(q.size()-1);
-		if (u->left != nil) q.add(q.size(),u->left);
-		if (u->right != nil) q.add(q.size(),u->right);
+	 	Node *u = q.back();
+		q.pop_back();
+	 	if (u->left != nil) q.push_back(u->left);
+	 	if (u->right != nil) q.push_back(u->right);
 	}
 }
 

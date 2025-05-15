@@ -9,7 +9,7 @@
 #define GRAPH_H
 
 #include <vector>
-#include "../../arrayBasedLists/include/Queue.h"
+#include <queue>
 
 namespace mySTL {
 
@@ -17,9 +17,9 @@ namespace mySTL {
 template<typename Graph>
 void bfs(Graph &g, int startingNode) {
 	std::vector<bool> visited(g.nVertices(), false);	// auxiliary boolean array to check visted nodes
-	Queue<int> q;		// queue: keep the visiting node
+	std::queue<int> q;		// queue: keep the visiting node
 	q.push(startingNode);		  	// push back, Add starting node
-	visited[startingNode] = true;   
+	visited[startingNode] = true;
 	//cout << "bfs " << startingNode << " visited " << endl;
 	while (q.size() > 0) {
 		int i = q.front();
@@ -30,7 +30,7 @@ void bfs(Graph &g, int startingNode) {
 			size_t j = edges[k]; 			// Get dest's node
 			if (!visited[j]) {
 				q.push(j); 	// push back
-				visited[j] = true;    
+				visited[j] = true;
 				//cout << "bfs " << j << " visited " << endl;
 			}
 		}
@@ -43,16 +43,16 @@ enum node { white, grey, black };	// white: never seen the vertex
 		  							// black: visted node (done)
 
 // Depth-First Search: Recursive
-template<class Graph>	
+template<class Graph>
 void dfs(Graph &g, int startingNode, std::vector<bool>  &visited) {
 	visited[startingNode] = true;  	 	// currently visiting i
 	//cout << "dfs " << startingNode << " visited " << endl;
-	
-	std::vector<int> edges; 	// stack to store i's outgoing Edges	 
+
+	std::vector<int> edges; 	// stack to store i's outgoing Edges
 	g.outEdges(startingNode, edges);   	// put i's outgoing Edges to edges
 	for (size_t k = 0; k < edges.size(); k++) {
 		size_t j = edges[k];	// get dest's node
-		if (visited[j] == false) 
+		if (visited[j] == false)
 			dfs(g, j, visited);
 	}
 }
@@ -67,7 +67,7 @@ void dfs(Graph &g, int startingNode) {
 template<class Graph>	// Iterative Version
 void dfs2(Graph &g, int startingNode) {
 	std::vector<bool> visited(g.nVertices(), false);	// auxiliary boolean array to check visted nodes
-	Queue<int> q;		// queue: keep the visiting node
+	std::queue<int> q;		// queue: keep the visiting node
 	q.push(startingNode);		  	// push back, Add starting node
 	while (q.size() > 0) {
 		int i = q.front();
