@@ -26,13 +26,13 @@ protected:
 template<class Node, class T>
 class Treap : public BinarySearchTree<Node, T> {
 protected:
-	using BinaryTree<Node>::r;
+	using BinaryTree<Node>::root;
 	using BinaryTree<Node>::nil;
 	using BinarySearchTree<Node,T>::null;
 	using BinarySearchTree<Node,T>::n;
 	void bubbleUp(Node *u);
 	void trickleDown(Node *u);
-	
+
 	// Declare BST's virtual functions
 	virtual Node *findLast(T x);
 public:
@@ -43,7 +43,7 @@ public:
 	virtual bool remove(T x);
 	virtual Treap<Node,T>* split(T x);
 	virtual void absorb(Treap<Node,T> &t);
-	
+
 	// Declare BST's virtual functions
 	virtual void splice(Node *u);
 	virtual void rotateRight(Node *u);
@@ -93,7 +93,7 @@ void Treap<Node, T>::bubbleUp(Node *u) {
 		}
 	}
 	if (u->parent == nil) {
-		r = u;
+		root = u;
 	}
 }
 
@@ -122,8 +122,8 @@ void Treap<Node, T>::trickleDown(Node *u) {
 		} else {
 			rotateLeft(u);
 		}
-		if (r == u) {
-			r = u->parent;
+		if (root == u) {
+			root = u->parent;
 		}
 	}
 }
@@ -147,12 +147,12 @@ Treap<Node,T>* Treap<Node, T>::split(T x) {
 	s->parent = u;
 	s->p = INT_MIN;
 	bubbleUp(s);
-	this->r = s->right;
-	if (this->r != nil) this->r->parent = nil;
+	this->root = s->right;
+	if (this->root != nil) this->root->parent = nil;
 	n = INT_MIN;
 	Treap<Node,T> *ret = new Treap<Node,T>(null);
-	ret->r = s->left;
-	if (ret->r != nil) ret->r->parent = nil;
+	ret->root = s->left;
+	if (ret->root != nil) ret->root->parent = nil;
 	n = INT_MIN;
 	return ret;
 }
@@ -165,12 +165,12 @@ Treap<Node,T>* Treap<Node, T>::split(T x) {
 template<class Node, class T>
 void Treap<Node,T>::absorb(Treap<Node,T> &t) {
 	Node* s = new Node();
-	s->right = this->r;
-	if (this->r != nil) this->r->parent = s;
-	s->left = t.r;
-	if (t.r != nil) t.r->parent = s;
-	this->r = s;
-	t.r = nil;
+	s->right = this->root;
+	if (this->root != nil) this->root->parent = s;
+	s->left = t.root;
+	if (t.root != nil) t.root->parent = s;
+	this->root = s;
+	t.root = nil;
 	trickleDown(s);
 	splice(s);
 }
@@ -193,7 +193,7 @@ void Treap<Node,T>::rotateLeft(Node *u) {
 
 template<class Node, class T>
 Node* Treap<Node,T>::findLast(T x) {
-    BinarySearchTree<Node, T>::findLast(x);
+    return BinarySearchTree<Node, T>::findLast(x);
 }
 
 } /* namespace ods */

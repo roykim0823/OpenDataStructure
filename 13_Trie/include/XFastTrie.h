@@ -12,8 +12,8 @@
 #include <climits>
 
 #include "LinearHashTable.h"
+#include "LinearHashTableTab.h"
 #include "BinaryTrie.h"
-#include "utils.h"
 
 namespace ods {
 

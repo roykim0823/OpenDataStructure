@@ -3,6 +3,7 @@ project(heap)
 
 set(CMAKE_CXX_FLAGS "-g -Wall")
 include_directories(../06_BinaryTrees/include)
+include_directories(../common)
 include_directories(include)
 file(GLOB SRC "src/*.cpp")
 

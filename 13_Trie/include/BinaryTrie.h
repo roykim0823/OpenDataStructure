@@ -9,12 +9,8 @@
 #define BINARYTRIE_H_
 
 #include<cstdlib>
-
+#include "utils.h"
 namespace ods {
-
-// Add intValue dummy
-template<class T>
-unsigned intValue(T x) {return (unsigned) x;}
 
 template<class N, class T>
 class BinaryTrieNode {
@@ -180,10 +176,7 @@ bool BinaryTrie<Node,T>::remove(T x) {
 		if (v->child[1-c] != NULL) break;
 	}
 	// 4 - update jump pointers
-	c = (ix >> w-i-1) & 1;
-	v->jump = u->child[1-c];
-	v = v->parent;
-	i--;
+	v->jump = u;
 	for (; i >= 0; i--) {
 		c = (ix >> (w-i-1)) & 1;
 		if (v->jump == u)

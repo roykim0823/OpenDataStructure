@@ -18,9 +18,9 @@ template<class Node, class T>
 class ScapegoatTree : public BinarySearchTree<Node, T> {
 protected:
 	using BinaryTree<Node>::nil;
-	using BinaryTree<Node>::r;
+	using BinaryTree<Node>::root;
 	using BinarySearchTree<Node,T>::n;
-	int q; 	// an upper-bound on the number of nodes( q/2<=n<=q ) 
+	int q; 	// an upper-bound on the number of nodes( q/2<=n<=q )
 	static int log32(int q);
 	int addWithDepth(Node *u);
 	void rebuild(Node *u);
@@ -49,9 +49,9 @@ inline int ScapegoatTree<Node,T>::log32(int q) {
 
 template<class Node, class T>
 inline int ScapegoatTree<Node,T>::addWithDepth(Node *u) {
-	Node *w = r;
+	Node *w = root;
 	if (w == nil) {
-		r = u;
+		root = u;
 		n++; q++;
 		return 0;
 	}
@@ -92,8 +92,8 @@ void ScapegoatTree<Node,T>::rebuild(Node *u) {
 	Node **a = new Node*[ns];
 	packIntoArray(u, a, 0);
 	if (p == nil) {
-		r = buildBalanced(a, 0, ns);
-		r->parent = nil;
+		root = buildBalanced(a, 0, ns);
+		root->parent = nil;
 	} else if (p->right == u) {
 		p->right = buildBalanced(a, 0, ns);
 		p->right->parent = p;
@@ -174,7 +174,7 @@ template<class Node, class T> inline
 bool ScapegoatTree<Node,T>::remove(T x) {
 	if (BinarySearchTree<Node,T>::remove(x)) {
 		if (2*n < q) {
-			rebuild(r);
+			rebuild(root);
 			q = n;
 		}
 		return true;

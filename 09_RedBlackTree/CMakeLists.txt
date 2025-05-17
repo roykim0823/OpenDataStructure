@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(BinaryTree)
+project(RBT)
 
 set(CMAKE_CXX_FLAGS "-g -Wall")
 include_directories(../06_BinaryTrees/include)

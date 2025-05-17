@@ -1,9 +1,0 @@
-cmake_minimum_required(VERSION 3.5)
-project(RBT)
-
-set(CMAKE_CXX_FLAGS "-g -Wall")
-include_directories(../06_BinaryTrees/include)
-include_directories(include)
-file(GLOB SRC "src/*.cpp")
-
-add_executable(tests ${SRC})
