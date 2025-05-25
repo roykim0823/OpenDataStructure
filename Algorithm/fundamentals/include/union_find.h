@@ -14,7 +14,7 @@ protected:
 public:
 	UnionFind(int n): cnt(n) {
 		for(int i=0; i<n; ++i)
-      id.push_back(i);
+      		id.push_back(i);
 	}
 
 	int count() { return cnt; }
@@ -23,6 +23,7 @@ public:
   std::vector<int> get_id() { return id; }
 };
 
+// Eager Approach
 // init: O(N), union: O(N), find: O(1)
 // total union: O(N^2) to process a sequence of N union commands on N objects
 class QuickFind : public UnionFind { // eager approach
@@ -31,28 +32,30 @@ public:
 
 	// Put p and q into the same component
 	void connect(int p, int q) override final {
-    if (find(p, q)) return;
+    	if (find(p, q)) return;
     
-    int i = find(p);
-    int j = find(q);
-		// change all entires with id[pID] to id[qID]
+    	int i = find(p);
+    	int j = find(q);
+		// change all entires with id[pID] to id[qID], O(n)
 		for(auto pos=id.begin(); pos!=id.end(); ++pos) {
 			if(*pos==i) {
-        *pos=j;
-      }
-    }
+        		*pos=j;
+      		}
+    	}
 		cnt--;
 	}
 };
 
+// Lazy Approach
 // init: O(N), union: O(N), find: O(N)
 class QuickUnion : public UnionFind	{ // lazy approach
 protected:
+	// Worst case: O(n)
 	virtual int root(int i)	{
 		// depth of i array accesses
 		while (i != id[i]) {
-      i=id[i];  // chase parent pointers until reach root
-    }
+      		i=id[i];  // chase parent pointers until reach root
+    	}
 		return i; 
 	}
 
@@ -62,16 +65,16 @@ public:
   bool find(int p, int q) override { return root(p) == root(q); }
 	
   virtual void connect(int p, int q) override {
-    if (find(p, q)) return;
+    	if (find(p, q)) return;
 
-    int i = root(p);
+    	int i = root(p);
 		int j = root(q);
 		id[i] = j;  // change root of p to point to root of q
 		cnt--;
 	}
 };
 
-// init: O(N), union: O(logN), find: O(logN)
+// init: O(N), union: O(lg N), find: O(lg N) at most, lg = log2
 class WeightedQuickUnion : public QuickUnion {
 protected:
 	std::vector<int> sz;	// size of component for roots  
@@ -79,13 +82,14 @@ public:
 	WeightedQuickUnion(int n): QuickUnion(n), sz(n, 1) {}
 
 	void connect(int p, int q) override final {
-    if (find(p, q)) return;
+    	if (find(p, q)) return;
 
-    int i = root(p);
+   	 	int i = root(p);
 		int j = root(q);
-    // link root of smaller tree to root of larger tree.
+
+    	// link root of smaller tree to child of larger tree's root.
 		if(sz[i] < sz[j]) { 
-      id[i] = j; sz[j]+=sz[i]; }
+      		id[i] = j; sz[j]+=sz[i]; }
 		else {
 			id[j] = i; sz[i]+=sz[j];
 		}
@@ -94,15 +98,15 @@ public:
 };
 
 // init: O(N), union: O(lg*N), find: O(lg*N)
-// In practice, WQUPC is O(N)
+// In practice, WQUPC (Path Compression) is O(N)
 class WQUPC : public WeightedQuickUnion {  // WeightedQuickUnion with Path Compression
 protected:
 	int root(int i)	override final{
 		// depth of i array accesses
 		while (i != id[i]) {
-      id[i] = id[id[i]];  // path compression!
-      i=id[i];  // chase parent pointers until reach root
-    }
+      		id[i] = id[id[i]];	// path compression!
+      		i=id[i];  			// chase parent pointers until reach root
+    	}
 		return i; 
 	}
 public:
