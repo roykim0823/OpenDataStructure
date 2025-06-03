@@ -6,9 +6,10 @@
 template <typename T>  // T is UniGraph or DiGraph
 class Traverse {
 protected:
-	std::vector<bool> marked;	// Mark node if a shorest path to this vertex is known
-	std::vector<int> edgeTo;     // last vertex on known path to this vertex
-	int source;             // starting node
+	std::vector<bool> marked;		// Mark node if a shorest path to this vertex is known
+	std::vector<int> edgeTo;     	// last vertex on known path to this vertex
+	std::vector<int> dfs_path;		// dfs_path only, alternative of edgeTo but simpler
+	int source;             		// starting node
 	T& graph;
 
 public:
@@ -53,6 +54,10 @@ public:
 		}
 		std::cout << std::endl;
 	}
+
+	std::vector<int> get_dfs_path() {
+		return dfs_path;
+	}
 };
 
 
@@ -71,12 +76,12 @@ private:
 		while(!q.empty()) {
 			int v = q.front();	// remove next vertex from the queue
 			q.pop();
-			
+
 			const std::vector<int>& temp = this->graph.adj(v);
-			for(auto pos=temp.begin(); pos !=temp.end(); ++pos) {  
-				if(this->marked[*pos] == false) {		// For every unmarked (not visited) adjacent vertex,
-					q.push(*pos);           	// Add it to the queue
-					this->marked[*pos] = true;      	// Mark it because path is known
+			for(auto pos=temp.begin(); pos !=temp.end(); ++pos) {
+				if(this->marked[*pos] == false) {	// For every unmarked (not visited) adjacent vertex,
+					q.push(*pos);           		// Add it to the queue
+					this->marked[*pos] = true;      // Mark it because path is known
 					this->edgeTo[*pos] = v;    		// Save last edge on a shortest path
 				}
 			}
@@ -98,7 +103,7 @@ public:
 
 	DFS(T& G, std::vector<int> s, bool iter=false): Traverse<T>(G, s[0]) {
 		if (iter) {
-			for(int i=0; i<s.size(); ++i) 
+			for(int i=0; i<s.size(); ++i)
 				dfs(s[i]);
 		} else {
 			for(int i=0; i<s.size(); ++i)
@@ -109,14 +114,16 @@ public:
 private:
 	void dfs(int v) {  // Recursive
 		this->marked[v] = true;
+		this->dfs_path.push_back(v);
 		const std::vector<int>& temp = this->graph.adj(v);
 		for(auto pos=temp.begin(); pos !=temp.end(); ++pos)
-		{  
+		{
 			if(this->marked[*pos]==false) {
 				this->edgeTo[*pos]=v;
 				dfs(*pos);
 			}
 		}
+		this->dfs_path.pop_back();
 	}
 
 	void dfs_iter(int v) {
