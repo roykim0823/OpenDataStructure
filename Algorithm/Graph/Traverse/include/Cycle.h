@@ -73,8 +73,8 @@ public:
 				for(int x = v; x != *w; x = edgeTo[x]) {
 					cycle.push(x);
 				}
-				//cycle.push(*w);
-				//cycle.push(v);
+				cycle.push(*w);
+				cycle.push(v);
 			}
 		}
 		onStack[v] = false;
