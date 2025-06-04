@@ -21,7 +21,7 @@ public:
 	int get_E() { return E;}
 
 	const std::vector<int>& adj(int v) {return adjList[v];}
-	
+
 	void get_adjList() {
       	for (int i=0; i<V; i++) {
 			std::cout << i << ":";

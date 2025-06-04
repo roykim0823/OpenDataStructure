@@ -27,5 +27,4 @@ int main() {
 
 	DFS dfs_search3(G1, {1, 2, 6});
 	dfs_search3.print_reachable();
-
 }

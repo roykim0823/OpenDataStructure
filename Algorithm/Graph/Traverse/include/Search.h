@@ -91,28 +91,43 @@ private:
 
 template <typename T>
 class DFS: public Traverse<T> {
+	// record of the dfs ordering for topological sort
+	std::queue<int> pre;			// vertices in preorder
+	std::queue<int> post;			// vertices in postorder
+	std::stack<int> reversePost;	// vertices in reverse postorder
 
 public:
-	DFS(T& G, int s=0, bool iter=false): Traverse<T>(G, s) {
-		if (iter) {
+	DFS(T& G, int s=0, bool recursive=true): Traverse<T>(G, s) {
+		if (recursive) {
 			dfs(s);
 		} else {
 			dfs_iter(s);
 		}
 	}
 
-	DFS(T& G, std::vector<int> s, bool iter=false): Traverse<T>(G, s[0]) {
-		if (iter) {
-			for(int i=0; i<s.size(); ++i)
-				dfs(s[i]);
+	DFS(T& G, std::vector<int> s, bool recursive=true): Traverse<T>(G) {
+		if (s.empty()) {
+			for (int i=0; i<this->graph.get_V(); ++i) {
+				s.push_back(i);
+			}
+		}
+		if (recursive) {
+			for(int i=0; i<s.size(); ++i) {
+				if (this->marked[i] == false) {
+					dfs(s[i]);
+				}
+			}
 		} else {
 			for(int i=0; i<s.size(); ++i)
-				dfs_iter(s[i]);
+				if (this->marked[i] == false) {
+					dfs_iter(s[i]);
+				}
 		}
 	}
 
 private:
 	void dfs(int v) {  // Recursive
+		pre.push(v);  					// traverse order
 		this->marked[v] = true;
 		this->dfs_path.push_back(v);
 		const std::vector<int>& temp = this->graph.adj(v);
@@ -124,6 +139,8 @@ private:
 			}
 		}
 		this->dfs_path.pop_back();
+		post.push(v);					// traverse order
+		reversePost.push(v);			// traverse order
 	}
 
 	void dfs_iter(int v) {
@@ -145,4 +162,8 @@ private:
 			}
 		}
 	}
+public:
+	std::queue<int> get_preorder()  { return pre; }
+	std::queue<int> get_postorder() { return post; }
+	std::stack<int> get_reversePostorder() { return reversePost; }
 };
